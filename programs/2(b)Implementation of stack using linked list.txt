@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int Element;
+    struct node *Next;
+};
+
+typedef struct node Stack;
+
+Stack *List = NULL;
+
+int IsEmpty()
+{
+    return (List == NULL);
+}
+
+void Push(int e)
+{
+    Stack *NewNode = (Stack *)malloc(sizeof(Stack));
+    NewNode->Element = e;
+    NewNode->Next = List;
+    List = NewNode;
+}
+
+void Pop()
+{
+    if (IsEmpty())
+    {
+        printf("Stack is Underflow...!\n");
+    }
+    else
+    {
+        Stack *TempNode = List;
+        List = List->Next;
+        printf("%d\n", TempNode->Element);
+        free(TempNode);
+    }
+}
+
+void Top()
+{
+    if (IsEmpty())
+    {
+        printf("Stack is Underflow...!\n");
+    }
+    else
+    {
+        printf("%d\n", List->Element);
+    }
+}
+
+void Display()
+{
+    if (IsEmpty())
+    {
+        printf("Stack is Underflow...!\n");
+    }
+    else
+    {
+        Stack *Position = List;
+        while (Position != NULL)
+        {
+            printf("%d\t", Position->Element);
+            Position = Position->Next;
+        }
+        printf("\n");
+    }
+}
+
+int main()
+{
+    int ch, e;
+    do
+    {
+        printf("1.PUSH 2.POP 3.TOP 4.DISPLAY 5.EXIT\n");
+        printf("Enter your choice: ");
+        scanf("%d", &ch);
+        switch (ch)
+        {
+        case 1:
+            printf("Enter the element: ");
+            scanf("%d", &e);
+            Push(e);
+            break;
+        case 2:
+            Pop();
+            break;
+        case 3:
+            Top();
+            break;
+        case 4:
+            Display();
+            break;
+        }
+    } while (ch != 5);
+    return 0;
+}

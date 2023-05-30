@@ -1,0 +1,142 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void create();
+void insert();
+void search();
+void deletion();
+void display();
+
+int i, e, n, pos;
+static int b[50];
+
+int main()
+{
+    int ch;
+    char g = 'y';
+    create();
+    do
+    {
+        printf("\nList Operations");
+        printf("\n1. Deletion\n2. Insert\n3. Search\n4. Exit\n");
+        printf("\nEnter your choice: ");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+        case 1:
+            deletion();
+            break;
+        case 2:
+            insert();
+            break;
+        case 3:
+            search();
+            break;
+        case 4:
+            exit(0);
+        default:
+            printf("\nEnter the correct choice:\n");
+            break;
+        }
+
+        printf("\nDo you want to continue? (y/n): ");
+        fflush(stdin);
+        scanf(" %c", &g);
+    } while (g == 'y' || g == 'Y');
+
+    return 0;
+}
+
+void create()
+{
+    printf("\nEnter the number of elements: ");
+    scanf("%d", &n);
+
+    printf("\nEnter list elements: ");
+    for (i = 0; i < n; i++)
+    {
+        scanf("%d", &b[i]);
+    }
+}
+
+void deletion()
+{
+    printf("\nEnter the position you want to delete: ");
+    scanf("%d", &pos);
+
+    if (pos >= n || pos < 0)
+    {
+        printf("\nInvalid location\n");
+    }
+    else
+    {
+        for (i = pos; i < n - 1; i++)
+        {
+            b[i] = b[i + 1];
+        }
+        n--;
+
+        printf("\nList elements after deletion:\n");
+        display();
+    }
+}
+
+void search()
+{
+    int flag = 0;
+
+    printf("\nEnter the element to be searched: ");
+    scanf("%d", &e);
+
+    for (i = 0; i < n; i++)
+    {
+        if (b[i] == e)
+        {
+            flag = 1;
+            printf("\nElement %d is found at position %d\n", e, i);
+            break;
+        }
+    }
+
+    if (flag == 0)
+    {
+        printf("\nElement %d is not found in the list\n", e);
+    }
+}
+
+void insert()
+{
+    printf("\nEnter the position you need to insert: ");
+    scanf("%d", &pos);
+
+    if (pos > n || pos < 0)
+    {
+        printf("\nInvalid location\n");
+    }
+    else
+    {
+        n++;
+
+        for (i = n - 1; i > pos; i--)
+        {
+            b[i] = b[i - 1];
+        }
+
+        printf("\nEnter the element to insert: ");
+        scanf("%d", &e);
+        b[pos] = e;
+
+        printf("\nList after insertion:\n");
+        display();
+    }
+}
+
+void display()
+{
+    for (i = 0; i < n; i++)
+    {
+        printf("\t%d", b[i]);
+    }
+    printf("\n");
+}

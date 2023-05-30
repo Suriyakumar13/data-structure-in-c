@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define max 5
+static int queue[max];
+int front = -1;
+int rear = -1;
+
+void insert(int x)
+{
+    if (rear == max - 1)
+    {
+        printf("\nQueue Full. Unable to insert element %d.\n", x);
+    }
+    else
+    {
+        queue[++rear] = x;
+        if (front == -1)
+            front = 0;
+        printf("\nElement %d inserted into the queue.\n", x);
+    }
+}
+
+int remove()
+{
+    if (front == -1 || front > rear)
+    {
+        printf("\nQueue Empty. Unable to remove element.\n");
+        return -1;
+    }
+    else
+    {
+        int val = queue[front++];
+        if (front > rear)
+            front = rear = -1;
+        printf("\nElement removed from the queue: %d\n", val);
+        return val;
+    }
+}
+
+void view()
+{
+    int i;
+    if (front == -1 || front > rear)
+    {
+        printf("\nQueue is empty.\n");
+    }
+    else
+    {
+        printf("\nFront --> ");
+        for (i = front; i <= rear; i++)
+        {
+            printf("%4d", queue[i]);
+        }
+        printf(" <-- Rear\n");
+    }
+}
+
+int main()
+{
+    int ch = 0, val;
+
+    while (ch != 4)
+    {
+        printf("\nQUEUE OPERATION\n");
+        printf("1. INSERT\n");
+        printf("2. DELETE\n");
+        printf("3. VIEW\n");
+        printf("4. QUIT\n");
+        printf("Enter Choice: ");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+        case 1:
+            printf("\nEnter element to insert: ");
+            scanf("%d", &val);
+            insert(val);
+            break;
+        case 2:
+            remove(0);
+            break;
+        case 3:
+            view();
+            break;
+        case 4:
+            exit(0);
+        default:
+            printf("\nInvalid Choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
