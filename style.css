@@ -1,3 +1,6 @@
+html{
+  color-scheme:light, dark;
+}
         /* Add some CSS to control the size and appearance of the iframe */
         iframe {
             width: 20rem;
