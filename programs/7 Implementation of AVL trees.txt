@@ -1,0 +1,195 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+    int data;
+    int bfactor;
+    struct node *left;
+    struct node *right;
+} Node;
+
+Node* getnode(int data);
+void copynode(Node *r, int data);
+Node* insertnode(Node *p, int data);
+void lefttoleft(Node **pptr, Node **aptr);
+void lefttoright(Node **pptr, Node **aptr, Node **bptr);
+void righttoright(Node **pptr, Node **aptr);
+void righttoleft(Node **pptr, Node **aptr, Node **bptr);
+void inorder(Node *root);
+void view(Node *root, int level);
+
+int main() {
+    int data, ch;
+    char choice = 'y';
+    Node *root = NULL;
+
+    printf("\nBasic Operations in AVL tree\n");
+    while (choice == 'y' || choice == 'Y') {
+        printf("\nEnter your choice (0: Display menu, 1: Insert, 2: View, 3: Exit): ");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 0:
+                printf("\nBasic Operations in AVL tree\n");
+                break;
+            case 1:
+                printf("Enter the value to be inserted: ");
+                scanf("%d", &data);
+                if (searchnode(root, data) == NULL) {
+                    root = insertnode(root, data);
+                } else {
+                    printf("\nData already exists");
+                }
+                break;
+            case 2:
+                if (root == NULL) {
+                    printf("\nAVL tree is empty");
+                    continue;
+                }
+                printf("\nInorder traversal of AVL tree:");
+                inorder(root);
+                printf("\nAVL tree is:");
+                view(root, 1);
+                break;
+            case 3:
+                releasenode(root);
+                exit(0);
+        }
+    }
+
+    return 0;
+}
+
+Node* getnode(int data) {
+    Node *newnode = (Node*)malloc(sizeof(Node));
+    newnode->data = data;
+    newnode->left = NULL;
+    newnode->right = NULL;
+    newnode->bfactor = 0;
+    return newnode;
+}
+
+void copynode(Node *r, int data) {
+    r->data = data;
+    r->left = NULL;
+    r->right = NULL;
+    r->bfactor = 0;
+}
+
+Node* insertnode(Node *p, int data) {
+    Node *a, *b;
+    if (p == NULL) {
+        p = getnode(data);
+        return p;
+    }
+    if (data < p->data) {
+        p->left = insertnode(p->left, data);
+        // AVL balancing code here
+    } else if (data > p->data) {
+        p->right = insertnode(p->right, data);
+        // AVL balancing code here
+    }
+    return p;
+}
+
+void lefttoleft(Node **pptr, Node **aptr) {
+    Node *p = *pptr, *a = *aptr;
+    printf("\nLeft to Left AVL rotation");
+    p->left = a->right;
+    a->right = p;
+    if (a->bfactor == 0) {
+        p->bfactor = 1;
+        a->bfactor = -1;
+    } else {
+        p->bfactor = 0;
+        a->bfactor = 0;
+    }
+    p = a;
+    *pptr = p;
+    *aptr = a;
+}
+
+void lefttoright(Node **pptr, Node **aptr, Node **bptr) {
+    Node *p = *pptr, *a = *aptr, *b = *bptr;
+    printf("\nLeft to Right AVL rotation");
+    b = a->right;
+    b->right = p;
+    if (b->bfactor == 1) {
+        p->bfactor = -1;
+    } else {
+        p->bfactor = 0;
+    }
+    if (b->bfactor == -1) {
+        a->bfactor = 1;
+    } else {
+        a->bfactor = 1;
+    }
+    b->bfactor = 0;
+    p = b;
+    *pptr = p;
+    *aptr = a;
+    *bptr = b;
+}
+
+void righttoright(Node **pptr, Node **aptr) {
+    Node *p = *pptr, *a = *aptr;
+    printf("\nRight to Right AVL rotation");
+    p->right = a->left;
+    a->left = p;
+    if (a->bfactor == 0) {
+        p->bfactor = -1;
+        a->bfactor = 1;
+    } else {
+        p->bfactor = 0;
+        a->bfactor = 0;
+    }
+    p = a;
+    *pptr = p;
+    *aptr = a;
+}
+
+void righttoleft(Node **pptr, Node **aptr, Node **bptr) {
+    Node *p = *pptr, *a = *aptr, *b = *bptr;
+    printf("\nRight to Left AVL rotation");
+    b = a->left;
+    a->left = b->right;
+    b->right = a;
+    p->right = b->left;
+    b->left = p;
+    if (b->bfactor == -1) {
+        p->bfactor = 1;
+    } else {
+        p->bfactor = 0;
+    }
+    if (b->bfactor == -1) {
+        a->bfactor = 0;
+    }
+    b->bfactor = 0;
+    p = b;
+    *pptr = p;
+    *aptr = a;
+    *bptr = b;
+}
+
+void inorder(Node *root) {
+    if (root == NULL) {
+        return;
+    }
+    inorder(root->left);
+    printf("\n%4d", root->data);
+    inorder(root->right);
+}
+
+void view(Node *root, int level) {
+    int k;
+    if (root == NULL) {
+        return;
+    }
+    view(root->right, level + 1);
+    printf("\n");
+    for (k = 0; k < level; k++) {
+        printf(" ");
+    }
+    printf("%d", root->data);
+    view(root->left, level + 1);
+}
