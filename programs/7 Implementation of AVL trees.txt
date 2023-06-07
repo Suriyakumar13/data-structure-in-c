@@ -4,24 +4,26 @@
 typedef struct node {
     int data;
     int bfactor;
-    struct node *left;
-    struct node *right;
+    struct node* left;
+    struct node* right;
 } Node;
 
 Node* getnode(int data);
-void copynode(Node *r, int data);
-Node* insertnode(Node *p, int data);
-void lefttoleft(Node **pptr, Node **aptr);
-void lefttoright(Node **pptr, Node **aptr, Node **bptr);
-void righttoright(Node **pptr, Node **aptr);
-void righttoleft(Node **pptr, Node **aptr, Node **bptr);
-void inorder(Node *root);
-void view(Node *root, int level);
+void copynode(Node* r, int data);
+Node* insertnode(Node* p, int data);
+void lefttoleft(Node** pptr, Node** aptr);
+void lefttoright(Node** pptr, Node** aptr, Node** bptr);
+void righttoright(Node** pptr, Node** aptr);
+void righttoleft(Node** pptr, Node** aptr, Node** bptr);
+void inorder(Node* root);
+void view(Node* root, int level);
+Node* searchnode(Node* root, int data);
+void releasenode(Node* root);
 
 int main() {
     int data, ch;
     char choice = 'y';
-    Node *root = NULL;
+    Node* root = NULL;
 
     printf("\nBasic Operations in AVL tree\n");
     while (choice == 'y' || choice == 'Y') {
@@ -61,7 +63,7 @@ int main() {
 }
 
 Node* getnode(int data) {
-    Node *newnode = (Node*)malloc(sizeof(Node));
+    Node* newnode = (Node*)malloc(sizeof(Node));
     newnode->data = data;
     newnode->left = NULL;
     newnode->right = NULL;
@@ -69,14 +71,14 @@ Node* getnode(int data) {
     return newnode;
 }
 
-void copynode(Node *r, int data) {
+void copynode(Node* r, int data) {
     r->data = data;
     r->left = NULL;
     r->right = NULL;
     r->bfactor = 0;
 }
 
-Node* insertnode(Node *p, int data) {
+Node* insertnode(Node* p, int data) {
     Node *a, *b;
     if (p == NULL) {
         p = getnode(data);
@@ -92,8 +94,8 @@ Node* insertnode(Node *p, int data) {
     return p;
 }
 
-void lefttoleft(Node **pptr, Node **aptr) {
-    Node *p = *pptr, *a = *aptr;
+void lefttoleft(Node** pptr, Node** aptr) {
+    Node* p = *pptr, *a = *aptr;
     printf("\nLeft to Left AVL rotation");
     p->left = a->right;
     a->right = p;
@@ -109,8 +111,8 @@ void lefttoleft(Node **pptr, Node **aptr) {
     *aptr = a;
 }
 
-void lefttoright(Node **pptr, Node **aptr, Node **bptr) {
-    Node *p = *pptr, *a = *aptr, *b = *bptr;
+void lefttoright(Node** pptr, Node** aptr, Node** bptr) {
+    Node* p = *pptr, *a = *aptr, *b = *bptr;
     printf("\nLeft to Right AVL rotation");
     b = a->right;
     b->right = p;
@@ -131,8 +133,8 @@ void lefttoright(Node **pptr, Node **aptr, Node **bptr) {
     *bptr = b;
 }
 
-void righttoright(Node **pptr, Node **aptr) {
-    Node *p = *pptr, *a = *aptr;
+void righttoright(Node** pptr, Node** aptr) {
+    Node* p = *pptr, *a = *aptr;
     printf("\nRight to Right AVL rotation");
     p->right = a->left;
     a->left = p;
@@ -148,8 +150,8 @@ void righttoright(Node **pptr, Node **aptr) {
     *aptr = a;
 }
 
-void righttoleft(Node **pptr, Node **aptr, Node **bptr) {
-    Node *p = *pptr, *a = *aptr, *b = *bptr;
+void righttoleft(Node** pptr, Node** aptr, Node** bptr) {
+    Node* p = *pptr, *a = *aptr, *b = *bptr;
     printf("\nRight to Left AVL rotation");
     b = a->left;
     a->left = b->right;
@@ -171,7 +173,7 @@ void righttoleft(Node **pptr, Node **aptr, Node **bptr) {
     *bptr = b;
 }
 
-void inorder(Node *root) {
+void inorder(Node* root) {
     if (root == NULL) {
         return;
     }
@@ -180,7 +182,7 @@ void inorder(Node *root) {
     inorder(root->right);
 }
 
-void view(Node *root, int level) {
+void view(Node* root, int level) {
     int k;
     if (root == NULL) {
         return;
@@ -192,4 +194,23 @@ void view(Node *root, int level) {
     }
     printf("%d", root->data);
     view(root->left, level + 1);
+}
+
+Node* searchnode(Node* root, int data) {
+    if (root == NULL || root->data == data) {
+        return root;
+    }
+    if (root->data < data) {
+        return searchnode(root->right, data);
+    }
+    return searchnode(root->left, data);
+}
+
+void releasenode(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    releasenode(root->left);
+    releasenode(root->right);
+    free(root);
 }
